@@ -1,15 +1,9 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, validators
-
 from users.serializers import UserReadSerializer
-from .models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Tag
-)
+
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 from .utils import set_tags_and_ingredients, user_has_relation
 
 
