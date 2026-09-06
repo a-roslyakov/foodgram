@@ -18,18 +18,22 @@ class RecipeAdmin(admin.ModelAdmin):
 
     favorite_count.short_description = 'В избранном'
 
+
 @admin.register(Ingredient)
 class IngridientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit')
     search_fields = ['name']
 
+
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
