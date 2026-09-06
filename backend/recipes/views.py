@@ -5,28 +5,16 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly
-)
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
 from .filters import AuthorTagsFavoritedInShoppingCartFilter, NameFilter
-from .models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Tag
-)
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 from .paginations import CustomPagination
 from .permissions import IsAuthorOnly
-from .serializers import (
-    IngredientSerializer,
-    RecipeSerializer,
-    TagSerializer
-)
+from .serializers import IngredientSerializer, RecipeSerializer, TagSerializer
 from .utils import create_or_delete_user_recipe_relation
 
 

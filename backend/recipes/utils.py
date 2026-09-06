@@ -36,11 +36,9 @@ def user_has_relation(request, model, recipe):
 
 def create_or_delete_user_recipe_relation(request, recipe, model, model_name):
     from .models import ShoppingCart
-    from .serializers import (
-        FavoriteSerializer,
-        RecipeNameImageCookingTimeSerializer,
-        ShoppingCartSerializer
-    )
+    from .serializers import (FavoriteSerializer,
+                              RecipeNameImageCookingTimeSerializer,
+                              ShoppingCartSerializer)
 
     current_object = model.objects.filter(user=request.user, recipe=recipe)
 

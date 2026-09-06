@@ -1,21 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet as DjoserViewSet
+from recipes.paginations import CustomPagination
+from recipes.permissions import IsAuthorOnly
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from recipes.paginations import CustomPagination
-from recipes.permissions import IsAuthorOnly
-
 from .models import Subscription
-from .serializers import (
-    AvatarSerializer,
-    SubscriptionsCreateSerializer,
-    SubscriptionsReadSerializer,
-    UserReadSerializer
-)
+from .serializers import (AvatarSerializer, SubscriptionsCreateSerializer,
+                          SubscriptionsReadSerializer, UserReadSerializer)
 
 User = get_user_model()
 
