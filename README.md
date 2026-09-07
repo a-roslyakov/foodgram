@@ -140,3 +140,4 @@ docker compose exec backend cp -r /app/collected_static/. /backend_static/static
 
 ### Автор
 _Артём Росляков_
+https://github.com/a-roslyakov

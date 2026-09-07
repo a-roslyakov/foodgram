@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'recipes',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,7 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'collected_static'
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 MEDIA_URL = '/media/'
 
@@ -142,9 +143,9 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
     'SERIALIZERS': {
-        'user': 'users.serializers.UserReadSerializer',
-        'current_user': 'users.serializers.UserReadSerializer',
-        'user_create': 'users.serializers.UserCreateSerializer',
+        'user': 'api.serializers.UserReadSerializer',
+        'current_user': 'api.serializers.UserReadSerializer',
+        'user_create': 'api.serializers.UserCreateSerializer',
     }
 }
 

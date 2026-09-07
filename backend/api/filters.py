@@ -1,6 +1,6 @@
 import django_filters.rest_framework as filters
 
-from .models import Ingredient, Recipe
+from recipes.models import Ingredient, Recipe
 
 
 class AuthorTagsFavoritedInShoppingCartFilter(filters.FilterSet):

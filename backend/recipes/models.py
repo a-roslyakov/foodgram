@@ -2,15 +2,23 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .constants import NAME_MAX_LENGTH
-from .utils import get_short_code
+from .constants import (
+    NAME_MAX_LENGTH,
+    MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
+    VALIDATE_VALUE_MIN,
+    VALIDATE_VALUE_MAX
+)
 
 User = get_user_model()
 
 
 class NameBaseModel(models.Model):
     """Базовая модель с полем имени."""
-    name = models.CharField('Название', max_length=256, unique=True)
+    name = models.CharField(
+        'Название',
+        max_length=MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
+        unique=True
+)
 
     class Meta:
         abstract = True
@@ -29,11 +37,20 @@ class Tag(NameBaseModel):
 
 
 class Ingredient(NameBaseModel):
-    measurement_unit = models.CharField('Единица измерения', max_length=256)
+    measurement_unit = models.CharField(
+        'Единица измерения',
+        max_length=MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL
+    )
 
     class Meta(NameBaseModel.Meta):
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('name', 'measurement_unit'),
+                name='unique_name_measurement_unit'
+            )
+        ]
 
 
 class Recipe(NameBaseModel):
@@ -45,10 +62,13 @@ class Recipe(NameBaseModel):
         through='RecipeIngredient'
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, verbose_name='Теги')
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления(в минутах)',
-        validators=[MinValueValidator(1), MaxValueValidator(1000)]
+        validators=[
+            MinValueValidator(VALIDATE_VALUE_MIN),
+            MaxValueValidator(VALIDATE_VALUE_MAX)
+        ]
     )
     short_link = models.CharField(
         'Короткая ссылка',
@@ -63,6 +83,8 @@ class Recipe(NameBaseModel):
 
     def save(self, *args, **kwargs):
         """Получение уникальной короткой ссылки."""
+        from api.utils import get_short_code
+
         if not self.short_link:
             code = get_short_code()
 
@@ -87,13 +109,18 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингридиент'
     )
-    amount = models.IntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=[MinValueValidator(1), MaxValueValidator(1000)]
+        validators=[
+            MinValueValidator(VALIDATE_VALUE_MIN),
+            MaxValueValidator(VALIDATE_VALUE_MAX)
+        ]
     )
 
     class Meta:
         default_related_name = 'recipe_ingredient'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
 
 class UserRecipeBaseModel(models.Model):

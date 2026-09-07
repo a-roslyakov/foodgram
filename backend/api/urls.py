@@ -3,15 +3,16 @@ from rest_framework.routers import DefaultRouter
 
 from . import views
 
-recipes_router_v1 = DefaultRouter()
-recipes_router_v1.register(
+router_v1 = DefaultRouter()
+router_v1.register(
     'recipes', views.RecipeViewSet, basename='recipes'
 )
-recipes_router_v1.register('tags', views.TagViewSet, basename='tags')
-recipes_router_v1.register(
+router_v1.register('tags', views.TagViewSet, basename='tags')
+router_v1.register(
     'ingredients', views.IngredientViewSet, basename='ingredients'
 )
+router_v1.register('users', views.UserViewSet, basename='user')
 
 urlpatterns = [
-    path('', include(recipes_router_v1.urls))
+    path('', include(router_v1.urls)),
 ]
