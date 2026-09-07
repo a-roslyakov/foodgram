@@ -7,21 +7,34 @@ from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet as DjoserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.response import Response
 
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
+from users.models import Subscription
 from .filters import AuthorTagsFavoritedInShoppingCartFilter, NameFilter
 from .paginations import Pagination
 from .permissions import IsAuthorOnly
-from .serializers import (AvatarSerializer, IngredientSerializer,
-                          RecipeSerializer, SubscriptionsCreateSerializer,
-                          SubscriptionsReadSerializer, TagSerializer,
-                          UserReadSerializer)
+from .serializers import (
+    AvatarSerializer,
+    IngredientSerializer,
+    RecipeSerializer,
+    SubscriptionsCreateSerializer,
+    SubscriptionsReadSerializer,
+    TagSerializer,
+    UserReadSerializer,
+)
 from .utils import create_or_delete_user_recipe_relation
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCart, Tag)
-from users.models import Subscription
 
 User = get_user_model()
 

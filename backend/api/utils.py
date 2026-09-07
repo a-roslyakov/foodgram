@@ -1,11 +1,10 @@
 import secrets
 
-from rest_framework import status
-from rest_framework.response import Response
-
 from .serializers import FavoriteSerializer, ShoppingCartSerializer
 from recipes.constants import LENGTH_SHORT_LINK
 from recipes.models import ShoppingCart
+from rest_framework import status
+from rest_framework.response import Response
 
 
 def get_short_code():

@@ -18,7 +18,7 @@ class NameBaseModel(models.Model):
         'Название',
         max_length=MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
         unique=True
-)
+    )
 
     class Meta:
         abstract = True

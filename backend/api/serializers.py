@@ -1,15 +1,23 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.db.models import Count
 from django.core.validators import RegexValidator
+from django.db.models import Count
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, validators
 
-from recipes.constants import (MAX_LENGTH_EMAIL,
-                               MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
-                               USER_PERSONAL_DATA_LENTH)
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            ShoppingCart, Tag)
+from recipes.constants import (
+    MAX_LENGTH_EMAIL,
+    MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
+    USER_PERSONAL_DATA_LENTH,
+)
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from users.models import Subscription
 
 User = get_user_model()
