@@ -351,7 +351,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             data['is_in_shopping_cart'] = False
         else:
             data['is_favorited'] = self.get_is_favorited(instance)
-            data['is_in_shopping_cart'] = self.get_is_in_shopping_cart(instance)
+            data['is_in_shopping_cart'] = self.get_is_in_shopping_cart(
+                instance
+            )
 
         return data
 
