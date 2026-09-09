@@ -146,7 +146,7 @@ DJOSER = {
         'user': 'api.serializers.UserReadSerializer',
         'current_user': 'api.serializers.UserReadSerializer',
         'user_create': 'api.serializers.UserCreateSerializer',
-    }
+    },
 }
 
 CSRF_TRUSTED_ORIGINS = [

@@ -21,14 +21,14 @@ from recipes.models import (
     ShoppingCart,
     Tag,
 )
-from users.models import Subscription
 from .filters import AuthorTagsFavoritedInShoppingCartFilter, NameFilter
 from .paginations import Pagination
 from .permissions import IsAuthorOnly
 from .serializers import (
     AvatarSerializer,
     IngredientSerializer,
-    RecipeSerializer,
+    RecipeCreateSerializer,
+    RecipeReadSerializer,
     SubscriptionsCreateSerializer,
     SubscriptionsReadSerializer,
     TagSerializer,
@@ -54,9 +54,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.prefetch_related(
         'tags', 'ingredients'
     ).select_related('author')
-    serializer_class = RecipeSerializer
     pagination_class = Pagination
     filterset_class = AuthorTagsFavoritedInShoppingCartFilter
+
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return RecipeReadSerializer
+        return RecipeCreateSerializer
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -137,7 +141,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     @action(
-        methods=['POST', 'DELETE'],  # Не понял про mapping.delete
+        methods=['POST', 'DELETE'],
         detail=True,
         permission_classes=[IsAuthenticated]
     )
@@ -226,14 +230,17 @@ class UserViewSet(DjoserViewSet):
     def subscribe(self, request, id):
         user = request.user
         author = get_object_or_404(User, pk=id)
+        author = User.objects.filter(pk=id).annotate(
+            recipes_count=Count('recipes')
+        ).first()
 
         if request.method == 'POST':
             serializer = SubscriptionsCreateSerializer(
                 data={'author': author.id},
-                context={'request': request}
+                context={'request': request, 'author': author}
             )
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(user=user)
                 return Response(
                     serializer.data,
                     status=status.HTTP_201_CREATED
@@ -242,12 +249,11 @@ class UserViewSet(DjoserViewSet):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if request.method == 'DELETE':
-            if user.subscriptions.filter(
-                author=author
-            ).exists():
-                Subscription.objects.filter(user=user, author=author).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+        count, _ = user.subscriptions.filter(
+            author=author
+        ).delete()
+        if count:
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             {'delete': 'Вы не подписаны на этого пользователя.'},
             status=status.HTTP_400_BAD_REQUEST

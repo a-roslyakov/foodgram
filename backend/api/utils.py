@@ -13,15 +13,15 @@ def get_short_code():
 
 def create_or_delete_user_recipe_relation(request, recipe, model, model_name):
     current_object = model.objects.filter(user=request.user, recipe=recipe)
-    if current_object.exists() and request.method == 'DELETE':
-        current_object.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    else:
-        if request.method == 'DELETE':
-            return Response(
-                {'detail': f'Этот рецепт не был добавлен в {model_name}'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    if request.method == 'DELETE':
+        count, _ = current_object.delete()
+        if count:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {'detail': f'Этот рецепт не был добавлен в {model_name}'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    if request.method == 'POST':
         serializer_class = (
             ShoppingCartSerializer if model == ShoppingCart
             else FavoriteSerializer
