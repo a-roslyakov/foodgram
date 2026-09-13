@@ -21,22 +21,22 @@ def create_or_delete_user_recipe_relation(request, recipe, model, model_name):
             {'detail': f'Этот рецепт не был добавлен в {model_name}'},
             status=status.HTTP_400_BAD_REQUEST
         )
-    if request.method == 'POST':
-        serializer_class = (
-            ShoppingCartSerializer if model == ShoppingCart
-            else FavoriteSerializer
-        )
-        serializer = serializer_class(
-            data={'recipe': recipe.id},
-            context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
-            )
+
+    serializer_class = (
+        ShoppingCartSerializer if model == ShoppingCart
+        else FavoriteSerializer
+    )
+    serializer = serializer_class(
+        data={'recipe': recipe.id},
+        context={'request': request}
+    )
+    if serializer.is_valid():
+        serializer.save()
         return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            serializer.data,
+            status=status.HTTP_201_CREATED
         )
+    return Response(
+        serializer.errors,
+        status=status.HTTP_400_BAD_REQUEST
+    )

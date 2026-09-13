@@ -158,6 +158,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class UserViewSet(DjoserViewSet):
     pagination_class = Pagination
 
+    def get_queryset(self):
+        qs = User.objects.all()
+        if self.request.user.is_authenticated:
+            qs = qs.annotate(recipes_count=Count('recipes'))
+        return qs
+
     @action(
         methods=['GET'],
         detail=False,
@@ -229,10 +235,7 @@ class UserViewSet(DjoserViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        author = get_object_or_404(User, pk=id)
-        author = User.objects.filter(pk=id).annotate(
-            recipes_count=Count('recipes')
-        ).first()
+        author = get_object_or_404(self.get_queryset(), pk=id)
 
         if request.method == 'POST':
             serializer = SubscriptionsCreateSerializer(

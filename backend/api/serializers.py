@@ -9,7 +9,7 @@ from rest_framework import serializers, validators
 from recipes.constants import (
     MAX_LENGTH_EMAIL,
     MAX_LENGTH_QUANTITY_FOR_RECIPE_MODEL,
-    USER_PERSONAL_DATA_LENTH,
+    USER_PERSONAL_DATA_LENGTH,
     VALIDATE_VALUE_MAX,
     VALIDATE_VALUE_MIN
 )
@@ -98,7 +98,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validators=[validators.UniqueValidator(queryset=User.objects.all())]
     )
     username = serializers.CharField(
-        max_length=USER_PERSONAL_DATA_LENTH,
+        max_length=USER_PERSONAL_DATA_LENGTH,
         required=True,
         validators=[
             validators.UniqueValidator(queryset=User.objects.all()),
@@ -112,11 +112,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         ]
     )
     first_name = serializers.CharField(
-        max_length=USER_PERSONAL_DATA_LENTH,
+        max_length=USER_PERSONAL_DATA_LENGTH,
         required=True
     )
     last_name = serializers.CharField(
-        max_length=USER_PERSONAL_DATA_LENTH,
+        max_length=USER_PERSONAL_DATA_LENGTH,
         required=True
     )
     password = serializers.CharField(required=True, write_only=True)
@@ -193,9 +193,6 @@ class SubscriptionsCreateSerializer(serializers.ModelSerializer):
             self.context['author'],
             context=self.context
         ).data
-
-    # Не сообразил как выполнить замечание с аннотированием во view и передачи
-    # именно этого объекта в сериализатор для subsctibe..
 
 
 class SubscriptionsReadSerializer(UserReadSerializer):

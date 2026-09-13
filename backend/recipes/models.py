@@ -121,6 +121,12 @@ class RecipeIngredient(models.Model):
         default_related_name = 'recipe_ingredient'
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('recipe', 'ingredient'),
+                name='unique_ingredient_for_recipe'
+            )
+        ]
 
 
 class UserRecipeBaseModel(models.Model):
@@ -138,11 +144,17 @@ class UserRecipeBaseModel(models.Model):
 
     class Meta:
         abstract = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'recipe'),
+                name='%(app_label)s_%(class)s_unique'
+            )
+        ]
 
 
 class ShoppingCart(UserRecipeBaseModel):
 
-    class Meta:
+    class Meta(UserRecipeBaseModel.Meta):
         default_related_name = 'shopping_carts'
         verbose_name = 'Список покупок пользователей'
         verbose_name_plural = 'Списки покупок пользователей'
@@ -153,7 +165,7 @@ class ShoppingCart(UserRecipeBaseModel):
 
 class Favorite(UserRecipeBaseModel):
 
-    class Meta:
+    class Meta(UserRecipeBaseModel.Meta):
         default_related_name = 'favorites'
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
